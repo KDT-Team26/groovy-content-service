@@ -9,6 +9,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.web.client.RestClient;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.groovy.backend.content.client.StudyServiceClient.StudyView;
 import com.sun.net.httpserver.HttpServer;
@@ -40,7 +42,7 @@ class StudyServiceClientContractTest {
 		));
 		int port = startStubServer("/api/studies/10", responseJson);
 
-		StudyServiceClient client = new StudyServiceClient("http://localhost:" + port, 2000, 3000);
+		StudyServiceClient client = new StudyServiceClient(RestClient.builder(), "http://localhost:" + port, 2000, 3000);
 
 		StudyView study = client.getStudy(10L).orElseThrow();
 
@@ -51,7 +53,7 @@ class StudyServiceClientContractTest {
 
 	@Test
 	void study_service가_죽어있으면_예외_대신_빈_Optional을_반환한다() {
-		StudyServiceClient client = new StudyServiceClient("http://localhost:1", 200, 200);
+		StudyServiceClient client = new StudyServiceClient(RestClient.builder(), "http://localhost:1", 200, 200);
 
 		assertThat(client.getStudy(10L)).isEmpty();
 	}

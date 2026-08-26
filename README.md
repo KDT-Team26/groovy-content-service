@@ -1,10 +1,11 @@
 # groovy-content-service
 
-**Groovy**(태그 기반 스터디 매칭 플랫폼) MSA의 **회고록(Memoir) · 댓글 · 좋아요** 도메인을 담당하는 백엔드 서비스입니다. 스터디 활동을 기록하는 회고록 게시글과, 그에 달리는 댓글/좋아요를 처리합니다.
 
-## 1. 이 레포는 무엇인가
+## 1. Repo: groovy-content-service
 
-Groovy 폴리레포 중 `content-service` 하나만 담은 독립 배포 단위입니다. identity-service와 study-service 둘 다에 동기 호출하는 유일한 서비스이며(작성자 이름 조회 + 스터디 정보/경험치 적립), 5개 공유 라이브러리를 전부 사용합니다.
+**Groovy**의 **회고록(Memoir) · 댓글 · 좋아요** 도메인을 담당하는 백엔드 서비스입니다.
+
+스터디 활동을 기록하는 회고록 게시글과, 그에 달리는 댓글/좋아요를 처리합니다.
 
 ## 2. 주요 기능
 
@@ -68,47 +69,16 @@ api-gateway가 `Path=/api/memoirs/**`를 이 서비스로 라우팅합니다.
 
 ## 6. 로컬 실행 방법
 
-### 방법 A — 독립 빌드
+### 독립 빌드
 
 ```bash
 ./gradlew :services:content-service:bootJar
 docker build -t groovy-content-service .
 ```
 
-### 방법 B — 로컬 JVM (MySQL/Kafka/identity-service/study-service 필요)
-
-```bash
-export SPRING_DEV_DB_URL="jdbc:mysql://localhost:3306/content_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul"
-export SPRING_DEV_DB_USERNAME=content_service
-export SPRING_DEV_DB_PASSWORD=content_service_local_only_pw
-export JWT_JWKS_URL=http://localhost:8081/.well-known/jwks.json
-export IDENTITY_SERVICE_URL=http://localhost:8081
-export STUDY_SERVICE_URL=http://localhost:8082
-export KAFKA_BOOTSTRAP_SERVERS=localhost:9092
-export KAFKA_SECURITY_PROTOCOL=SASL_PLAINTEXT
-
-./gradlew :services:content-service:bootRun
-```
-
-### 방법 C — 전체 스택 (권장)
-
-```bash
-# 원본 Groovy 레포 루트에서
-cp .env.example .env
-docker compose -f docker-compose.local.yml up -d --build content-service
-```
-
 기본 포트는 `8083`입니다.
 
-## 7. 기존 모노레포에서 어느 부분을 떼온 것인가
-
-레거시 모놀리스 `groovy/`의 `domain/memoir` 패키지(회고록, 댓글, 좋아요)가 이 서비스로 이전되었습니다.
-
-- **그대로 옮겨온 것**: 엔티티/서비스/레포지토리, 댓글/좋아요를 Memoir와 함께 조회·캐스케이드 삭제하는 단일 Aggregate 구조
-- **MSA 전환 과정에서 새로 생긴 것**: `client` 패키지의 `UserServiceClient`(공유)/`StudyServiceClient`(로컬) — 원래 같은 프로세스 내 JPA 조인/서비스 호출로 처리하던 것을, 서비스 분리 후 동기 HTTP 호출로 재구현. `outbox`/`notification` 패키지도 신규.
-- **격리 작업 상세**: `docs/transfer/groovy-content-service.md`(원본 레포 기준) — content-service를 끝으로 계획서상 6개 서비스(gateway/notification/identity/study/calendar/content) 격리가 완료되었다고 기록되어 있습니다.
-
-## 8. 모니터링 스택에서 관측되는 부분
+## 7. 모니터링 스택에서 관측되는 부분
 
 | 스택 | 관측 내용 |
 |---|---|
