@@ -1,4 +1,4 @@
-package com.groovy.backend.content.outbox;
+package com.groovy.backend.outbox;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

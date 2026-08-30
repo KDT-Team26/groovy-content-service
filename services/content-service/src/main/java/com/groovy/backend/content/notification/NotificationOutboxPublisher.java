@@ -2,7 +2,7 @@ package com.groovy.backend.content.notification;
 
 import org.springframework.stereotype.Component;
 
-import com.groovy.backend.content.outbox.OutboxEventWriter;
+import com.groovy.backend.outbox.OutboxEventWriter;
 import com.groovy.backend.eventcontract.notification.NotificationPayload;
 
 import lombok.RequiredArgsConstructor;
