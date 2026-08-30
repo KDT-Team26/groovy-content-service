@@ -41,7 +41,10 @@ jobs:
           java-version: '21'
 
       - name: Run downstream client contract tests
-        run: ./gradlew test --tests "*ContractTest" --no-daemon
+        run: ./gradlew test --tests "*ContractTest" --tests "*TracePropagationTest" --no-daemon
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GPR_TOKEN: ${{ secrets.GPR_TOKEN }}
 
   content-service:
     needs: contract-test
@@ -65,6 +68,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          secrets: |
+            gpr_actor=${{ github.actor }}
+            gpr_token=${{ secrets.GPR_TOKEN }}
           # sha 태그만 쓴다(:latest 같은 가변 태그 없음) — GitOps는 groovy-infra의 values.yaml에
           # 박힌 정확한 태그로만 배포 대상을 판단하므로, 가변 태그가 있으면 오히려 혼란만 준다.
           tags: ttt103/groovy-content-service:${{ github.sha }}
