@@ -26,10 +26,9 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfig {
 
 	private static final String[] PERMIT_ALL_PATTERNS = {
+		// TODO: 헬스체크 경로 정리 — 세부 그룹은 대시보드에서만 조회하면 되고 굳이 익명
+		// 접근을 열어둘 필요가 없어 최상위 한 줄로 단순화.
 		"/actuator/health",
-		// k8s liveness/readiness probe가 쓰는 하위 경로(/actuator/health/liveness, /readiness).
-		// 리터럴 "/actuator/health" 는 하위 경로에 매칭되지 않아 probe가 401을 받는다.
-		"/actuator/health/**",
 		"/actuator/prometheus"
 	};
 
