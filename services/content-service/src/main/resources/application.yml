@@ -35,6 +35,12 @@ spring:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  # client-common UserServiceClient의 authorName 캐시(cache-aside)가 쓰는 공용 Redis
+  # (groovy-infra helm/platform, notification-service와 동일 인스턴스 공유).
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
 
 server:
   port: 8083
@@ -65,6 +71,8 @@ identity-service:
   url: ${IDENTITY_SERVICE_URL:http://identity-service:8081}
   connect-timeout-ms: ${IDENTITY_SERVICE_CONNECT_TIMEOUT_MS:2000}
   read-timeout-ms: ${IDENTITY_SERVICE_READ_TIMEOUT_MS:3000}
+  # 이름은 signup 이후 바꾸는 API가 없어 사실상 불변 — 넉넉하게 24시간 기본값.
+  name-cache-ttl-seconds: ${IDENTITY_SERVICE_NAME_CACHE_TTL_SECONDS:86400}
 
 # MSA 전환 Phase 12 패턴 재사용: 분산 트레이싱(TracingConfig 참고).
 management:
