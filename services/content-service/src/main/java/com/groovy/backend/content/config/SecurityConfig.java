@@ -29,7 +29,7 @@ public class SecurityConfig {
 		"/actuator/health",
 		// k8s liveness/readiness probe가 쓰는 하위 경로(/actuator/health/liveness, /readiness).
 		// 리터럴 "/actuator/health" 는 하위 경로에 매칭되지 않아 probe가 401을 받는다.
-		"/actuator/health/**",
+		// "/actuator/health/**",
 		"/actuator/prometheus"
 	};
 
