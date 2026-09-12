@@ -20,6 +20,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// client-common의 UserServiceClient가 authorName 조회를 Redis에 cache-aside로
+	// 캐싱하는 데 쓴다(identity-service /api/users/names 호출 폭증 완화).
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 	// Phase 7(DB per Service) 패턴 재사용: content_db를 이 서비스가 직접 소유하므로 자기
 	// 스키마 마이그레이션을 직접 관리한다.
 	implementation 'org.springframework.boot:spring-boot-flyway'
